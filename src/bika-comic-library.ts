@@ -19,6 +19,7 @@ import {
   toHomeChip,
   toSortKeyword,
 } from "./bika-comic-shared";
+import { buildBikaImageUrl } from "./bika-image";
 import { bikaRequest } from "./bika-request";
 import type {
   BikaFavoriteFolderPayload,
@@ -193,12 +194,17 @@ async function getNavigationItems() {
   );
   const authorization = String(await loadPluginSetting("auth.authorization", ""));
   const categoryNavItems = await Promise.all(
-    categories.map(async (item: StringMap) =>
-      toActionItem({
+    categories.map(async (item: StringMap) => {
+      const thumb = toStringMap(item.thumb);
+      const fileServer = String(thumb.fileServer ?? "").trim();
+      const path = String(thumb.path ?? "").trim();
+      return toActionItem({
         title: String(item.title ?? ""),
+        coverUrl: fileServer && path ? await buildBikaImageUrl(fileServer, path, "else") : "",
+        coverPath: path,
         action: await buildHomeAction(item, authorization),
-      }),
-    ),
+      });
+    }),
   );
 
   return [
@@ -397,7 +403,6 @@ export async function getFunctionPage(
   }
 
   if (id === "navigation") {
-    const supportsActionTiles = toStringMap(payload.extern).supportsActionTiles === true;
     const blocked = new Set(toStrList(await loadPluginSetting("home.blockedCategories", [])));
     const items = (await getNavigationItems()).filter((item) => {
       const title = String(item?.title ?? "").trim();
@@ -422,12 +427,7 @@ export async function getFunctionPage(
         title: "导航",
         body: {
           type: "list" as const,
-          children: [
-            {
-              type: supportsActionTiles ? "action-tiles" : "action-grid",
-              key: "items",
-            },
-          ],
+          children: [{ type: "action-grid", key: "items" }],
         },
       } as unknown as FunctionPageContract["scheme"],
       data: {
