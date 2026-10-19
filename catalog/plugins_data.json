@@ -8,7 +8,7 @@
       "describe": "独立更新的哔咔漫画插件",
       "version": "0.1.1",
       "home": "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal",
-      "updateUrl": "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-bika-personal/releases/latest",
+      "updateUrl": "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-bika-personal/releases/tags/v0.1.1",
       "npmName": "",
       "breeze-plugin-github-repository": "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal"
     }
