@@ -1,8 +1,15 @@
 import type { ComicListScene, InfoContract } from "breeze-plugin-kit";
 
-export type BikaPluginInfo = InfoContract;
+export type BikaPluginInfo = InfoContract & {
+  breezeExperience: {
+    searchHotFunction: string;
+    profileTab: boolean;
+    legacySources: string[];
+    searchQuickCategories: string[];
+  };
+};
 
-export const BIKA_PLUGIN_ID = "0a0e5858-a467-4702-994a-79e608a4589d";
+export const BIKA_PLUGIN_ID = "e9f18928-3ba8-4d86-a12e-b53a62f47933";
 export function buildRankingScene(): ComicListScene {
   return {
     title: "哔咔排行榜",
@@ -55,36 +62,30 @@ export function buildCloudFavoriteScene(): ComicListScene {
 
 export function buildManifestInfo(): BikaPluginInfo {
   return {
-    name: "哔咔漫画",
+    name: "哔咔漫画 · 个人版",
     uuid: BIKA_PLUGIN_ID,
     iconUrl:
-      "https://raw.githubusercontent.com/deretame/Breeze-plugin-bikaComic/main/assets/logo_round.webp",
-    describe: "哔咔漫画插件",
-    version: "0.0.11",
-    updateUrl: "https://api.github.com/repos/deretame/Breeze-plugin-bikaComic/releases/latest",
-    home: "https://github.com/deretame/Breeze-plugin-bikaComic",
-    npmName: "breeze-plugin-bika-comic",
+      "https://raw.githubusercontent.com/kl5212840-lang/Breeze-plugin-bika-personal/main/assets/logo_round.webp",
+    describe: "独立更新的哔咔漫画插件",
+    version: "0.1.0",
+    updateUrl: "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-bika-personal/releases/latest",
+    home: "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal",
+    npmName: "",
+    breezeExperience: {
+      searchHotFunction: "hotSearch",
+      profileTab: true,
+      legacySources: ["0a0e5858-a467-4702-994a-79e608a4589d"],
+      searchQuickCategories: ["短篇", "嗶咔漢化", "CG雜圖", "禁書目錄", "生肉"],
+    },
     function: [
       {
-        id: "hotSearch",
-        title: "热搜",
-        action: {
-          type: "openPluginFunction",
-          payload: {
-            id: "hotSearch",
-            title: "热搜",
-            presentation: "dialog",
-          },
-        },
-      },
-      {
         id: "navigation",
-        title: "导航",
+        title: "分类",
         action: {
           type: "openPluginFunction",
           payload: {
             id: "navigation",
-            title: "导航",
+            title: "分类",
             presentation: "page",
           },
         },
@@ -96,16 +97,6 @@ export function buildManifestInfo(): BikaPluginInfo {
           type: "openComicList",
           payload: {
             scene: buildRankingScene(),
-          },
-        },
-      },
-      {
-        id: "cloudFavorite",
-        title: "云端收藏",
-        action: {
-          type: "openCloudFavorite",
-          payload: {
-            title: "云端收藏",
           },
         },
       },

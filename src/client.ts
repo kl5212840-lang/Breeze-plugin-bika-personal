@@ -1,8 +1,7 @@
 import axios, { AxiosHeaders } from "axios";
 import { buildUnauthorizedError, cache, hostRuntime } from "breeze-plugin-kit";
 import { loadPluginSetting } from "./plugin-config";
-
-const BIKA_PLUGIN_ID = "0a0e5858-a467-4702-994a-79e608a4589d";
+import { BIKA_PLUGIN_ID } from "./info";
 
 type ClientPayload = {
   url?: string;

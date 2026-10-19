@@ -19,7 +19,6 @@ import {
   toHomeChip,
   toSortKeyword,
 } from "./bika-comic-shared";
-import { buildBikaImageUrl } from "./bika-image";
 import { bikaRequest } from "./bika-request";
 import type {
   BikaFavoriteFolderPayload,
@@ -180,45 +179,29 @@ export async function searchComic(payload: BikaSearchPayload = {}): Promise<Sear
   };
 }
 
-export async function getHomeData(_payload: BikaHomePayload = {}): Promise<FunctionPageContract> {
+async function getNavigationItems() {
   const apiBase = await getApiBase();
-  const [categoriesResponse, keywordsResponse] = await Promise.all([
-    bikaRequest({
-      url: `${apiBase}categories`,
-      method: "GET",
-      cache: true,
-    }),
-    bikaRequest({
-      url: `${apiBase}keywords`,
-      method: "GET",
-      cache: true,
-    }),
-  ]);
-
+  const categoriesResponse = await bikaRequest({
+    url: `${apiBase}categories`,
+    method: "GET",
+    cache: true,
+  });
   const categoriesData = toStringMap(toStringMap(categoriesResponse).data);
   const categoriesRaw = Array.isArray(categoriesData.categories) ? categoriesData.categories : [];
   const categories: StringMap[] = categoriesRaw.filter(
     (item): item is StringMap => !!item && typeof item === "object" && !Array.isArray(item),
   );
   const authorization = String(await loadPluginSetting("auth.authorization", ""));
-  const keywordsData = toStringMap(toStringMap(keywordsResponse).data);
-  const keywordItems = Array.isArray(keywordsData.keywords)
-    ? keywordsData.keywords.map((item: unknown) => toHomeChip(item))
-    : [];
-
   const categoryNavItems = await Promise.all(
-    categories.map(async (item: StringMap) => {
-      const thumb = toStringMap(item.thumb);
-      return toActionItem({
+    categories.map(async (item: StringMap) =>
+      toActionItem({
         title: String(item.title ?? ""),
-        coverUrl: await buildBikaImageUrl(thumb.fileServer, thumb.path, "else"),
-        coverPath: String(thumb.path ?? ""),
         action: await buildHomeAction(item, authorization),
-      });
-    }),
+      }),
+    ),
   );
 
-  const navItems = [
+  return [
     toActionItem({
       title: "最近更新",
       action: await buildHomeAction({ title: "最近更新" } as StringMap, authorization),
@@ -229,6 +212,22 @@ export async function getHomeData(_payload: BikaHomePayload = {}): Promise<Funct
     }),
     ...categoryNavItems,
   ];
+}
+
+export async function getHomeData(_payload: BikaHomePayload = {}): Promise<FunctionPageContract> {
+  const apiBase = await getApiBase();
+  const [navItems, keywordsResponse] = await Promise.all([
+    getNavigationItems(),
+    bikaRequest({
+      url: `${apiBase}keywords`,
+      method: "GET",
+      cache: true,
+    }),
+  ]);
+  const keywordsData = toStringMap(toStringMap(keywordsResponse).data);
+  const keywordItems = Array.isArray(keywordsData.keywords)
+    ? keywordsData.keywords.map((item: unknown) => toHomeChip(item))
+    : [];
 
   return {
     source: BIKA_PLUGIN_ID,
@@ -240,10 +239,10 @@ export async function getHomeData(_payload: BikaHomePayload = {}): Promise<Funct
         type: "list" as const,
         children: [
           { type: "chip-list" as const, key: "keywords" },
-          { type: "action-grid" as const, key: "navItems" },
+          { type: "action-tiles" as const, key: "navItems" },
         ],
       },
-    },
+    } as unknown as FunctionPageContract["scheme"],
     data: {
       keywords: keywordItems,
       navItems,
@@ -369,9 +368,16 @@ export async function getFunctionPage(
   ).trim();
 
   if (id === "hotSearch") {
-    const home = await getHomeData(payload as BikaHomePayload);
-    const data = toStringMap(home.data);
-    const items = Array.isArray(data.keywords) ? data.keywords : [];
+    const apiBase = await getApiBase();
+    const keywordsResponse = await bikaRequest({
+      url: `${apiBase}keywords`,
+      method: "GET",
+      cache: true,
+    });
+    const keywordsData = toStringMap(toStringMap(keywordsResponse).data);
+    const items = Array.isArray(keywordsData.keywords)
+      ? keywordsData.keywords.map((item: unknown) => toHomeChip(item))
+      : [];
     return {
       source: BIKA_PLUGIN_ID,
       scheme: {
@@ -391,10 +397,8 @@ export async function getFunctionPage(
   }
 
   if (id === "navigation") {
-    const home = await getHomeData(payload as BikaHomePayload);
-    const data = toStringMap(home.data);
     const blocked = new Set(toStrList(await loadPluginSetting("home.blockedCategories", [])));
-    const items = (Array.isArray(data.navItems) ? data.navItems : []).filter((item: StringMap) => {
+    const items = (await getNavigationItems()).filter((item) => {
       const title = String(item?.title ?? "").trim();
       if (blocked.has(title)) {
         return false;
@@ -417,9 +421,9 @@ export async function getFunctionPage(
         title: "导航",
         body: {
           type: "list" as const,
-          children: [{ type: "action-grid" as const, key: "items" }],
+          children: [{ type: "action-tiles" as const, key: "items" }],
         },
-      },
+      } as unknown as FunctionPageContract["scheme"],
       data: {
         items,
         hasReachedMax: true,
