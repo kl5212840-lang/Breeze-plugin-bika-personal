@@ -239,7 +239,7 @@ export async function getHomeData(_payload: BikaHomePayload = {}): Promise<Funct
         type: "list" as const,
         children: [
           { type: "chip-list" as const, key: "keywords" },
-          { type: "action-tiles" as const, key: "navItems" },
+          { type: "action-grid" as const, key: "navItems" },
         ],
       },
     } as unknown as FunctionPageContract["scheme"],
@@ -397,6 +397,7 @@ export async function getFunctionPage(
   }
 
   if (id === "navigation") {
+    const supportsActionTiles = toStringMap(payload.extern).supportsActionTiles === true;
     const blocked = new Set(toStrList(await loadPluginSetting("home.blockedCategories", [])));
     const items = (await getNavigationItems()).filter((item) => {
       const title = String(item?.title ?? "").trim();
@@ -421,7 +422,12 @@ export async function getFunctionPage(
         title: "导航",
         body: {
           type: "list" as const,
-          children: [{ type: "action-tiles" as const, key: "items" }],
+          children: [
+            {
+              type: supportsActionTiles ? "action-tiles" : "action-grid",
+              key: "items",
+            },
+          ],
         },
       } as unknown as FunctionPageContract["scheme"],
       data: {
