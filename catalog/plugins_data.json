@@ -12,5 +12,19 @@
       "npmName": "",
       "breeze-plugin-github-repository": "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal"
     }
+  },
+  {
+    "repo": "kl5212840-lang/Breeze-plugin-JmComic-change",
+    "manifest": {
+      "name": "禁漫天堂+",
+      "uuid": "6886291b-f524-441c-844b-c2efae9899a9",
+      "iconUrl": "https://raw.githubusercontent.com/kl5212840-lang/Breeze-plugin-JmComic-change/main/assets/fO.webp",
+      "describe": "个人页、分类、消息、收藏、签到与多线路回退",
+      "version": "0.3.0",
+      "home": "https://github.com/kl5212840-lang/Breeze-plugin-JmComic-change",
+      "updateUrl": "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-JmComic-change/releases/latest",
+      "npmName": "",
+      "breeze-plugin-github-repository": "https://github.com/kl5212840-lang/Breeze-plugin-JmComic-change"
+    }
   }
 ]
