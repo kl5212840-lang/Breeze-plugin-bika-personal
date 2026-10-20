@@ -2,13 +2,13 @@
   {
     "repo": "kl5212840-lang/Breeze-plugin-bika-personal",
     "manifest": {
-      "name": "哔咔漫画 · 增强版",
+      "name": "哔咔漫画+",
       "uuid": "e9f18928-3ba8-4d86-a12e-b53a62f47933",
       "iconUrl": "https://raw.githubusercontent.com/kl5212840-lang/Breeze-plugin-bika-personal/main/assets/logo_round.webp",
       "describe": "独立更新的哔咔漫画插件",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "home": "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal",
-      "updateUrl": "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-bika-personal/releases/tags/v0.1.4",
+      "updateUrl": "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-bika-personal/releases/tags/v0.1.5",
       "npmName": "",
       "breeze-plugin-github-repository": "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal"
     }
