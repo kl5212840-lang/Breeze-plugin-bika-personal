@@ -1,4 +1,5 @@
 import type { ComicListScene, InfoContract } from "breeze-plugin-kit";
+import { BIKA_SEARCH_CATEGORY_OPTIONS } from "./bika-constants";
 
 export type BikaPluginInfo = InfoContract & {
   breezeExperience: {
@@ -67,7 +68,7 @@ export function buildManifestInfo(): BikaPluginInfo {
     iconUrl:
       "https://raw.githubusercontent.com/kl5212840-lang/Breeze-plugin-bika-personal/main/assets/logo_round.webp",
     describe: "独立更新的哔咔漫画插件",
-    version: "0.1.2",
+    version: "0.1.3",
     updateUrl: "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-bika-personal/releases/latest",
     home: "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal",
     npmName: "",
@@ -75,7 +76,16 @@ export function buildManifestInfo(): BikaPluginInfo {
       searchHotFunction: "hotSearch",
       profileTab: true,
       legacySources: ["0a0e5858-a467-4702-994a-79e608a4589d"],
-      searchQuickCategories: ["短篇", "嗶咔漢化", "CG雜圖", "禁書目錄", "生肉"],
+      searchQuickCategories: [
+        "短篇",
+        "嗶咔漢化",
+        "CG雜圖",
+        "禁書目錄",
+        "生肉",
+        ...BIKA_SEARCH_CATEGORY_OPTIONS.filter(
+          (item) => !["短篇", "嗶咔漢化", "CG雜圖", "禁書目錄", "生肉"].includes(item),
+        ),
+      ],
     },
     function: [
       {

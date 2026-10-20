@@ -17,16 +17,6 @@ import { getApiBase } from "./client";
 import { BIKA_PLUGIN_ID } from "./info";
 import { loadPluginSetting, savePluginSetting } from "./plugin-config";
 
-export const runtimeSelectedCategories: string[] = [];
-
-export function setRuntimeSelectedCategories(values: string[]) {
-  runtimeSelectedCategories.splice(0, runtimeSelectedCategories.length, ...values);
-}
-
-export function getRuntimeSelectedCategories() {
-  return runtimeSelectedCategories;
-}
-
 function buildMetadata(type: string, name: string, value: unknown): MetadataListItem | null {
   const list = Array.isArray(value) ? value : value == null ? [] : [value];
   const normalized = list

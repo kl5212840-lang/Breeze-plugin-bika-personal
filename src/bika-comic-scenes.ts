@@ -6,7 +6,6 @@ import type {
 import {
   boolKeyList,
   getBikaRankingOptions,
-  getRuntimeSelectedCategories,
   loadBlockedCategories,
 } from "./bika-comic-shared";
 import { BIKA_SEARCH_CATEGORY_OPTIONS } from "./bika-constants";
@@ -163,8 +162,8 @@ export async function getAdvancedSearchScheme(
           label: "排序",
           options: [
             { label: "最新", value: 1 },
-            { label: "最多喜欢", value: 2 },
-            { label: "最多指名", value: 3 },
+            { label: "最早", value: 2 },
+            { label: "最多喜欢", value: 3 },
             { label: "最多观看", value: 4 },
           ],
         },
@@ -191,8 +190,7 @@ export async function getAdvancedSearchScheme(
     data: {
       values: {
         sortBy: selectedSortBy,
-        categories:
-          selectedCategories.length > 0 ? selectedCategories : getRuntimeSelectedCategories(),
+        categories: selectedCategories,
         blockedCategories: selectedBlocked.length > 0 ? selectedBlocked : blockedCategories,
       },
     },

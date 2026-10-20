@@ -9,10 +9,8 @@ import type {
 import {
   boolKeyList,
   buildHomeAction,
-  getRuntimeSelectedCategories,
   loadBlockedCategories,
   saveBlockedCategories,
-  setRuntimeSelectedCategories,
   toActionItem,
   toBoolMap,
   toComicListItem,
@@ -48,9 +46,6 @@ export async function searchComic(payload: BikaSearchPayload = {}): Promise<Sear
   const mode = String(extern.mode ?? payloadMap.mode ?? "").trim();
   const creatorId = String(extern.creatorId ?? payloadMap.creatorId ?? "").trim();
   const categories = boolKeyList(extern.categories ?? payloadMap.categories);
-  if (categories.length) {
-    setRuntimeSelectedCategories(categories);
-  }
   const blockedCategories = boolKeyList(extern.blockedCategories ?? payloadMap.blockedCategories);
   if (blockedCategories.length || extern.blockedCategories || payloadMap.blockedCategories) {
     await saveBlockedCategories(blockedCategories);
@@ -168,7 +163,7 @@ export async function searchComic(payload: BikaSearchPayload = {}): Promise<Sear
       ...(mode ? { mode } : {}),
       ...(creatorId ? { creatorId } : {}),
       sortBy: toNum(extern.sortBy ?? payloadMap.sortBy, 1),
-      categories: toBoolMap(categories.length ? categories : getRuntimeSelectedCategories()),
+      categories: toBoolMap(categories),
       blockedCategories: toBoolMap(
         blockedCategories.length ? blockedCategories : await loadBlockedCategories(),
       ),
