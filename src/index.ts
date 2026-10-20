@@ -29,6 +29,7 @@ import {
   init,
   loginWithPassword,
   saveSettings,
+  updateAvatar,
   updatePassword,
   updateProfile,
 } from "./bika-settings";
@@ -47,6 +48,7 @@ export default {
   getSettingsBundle,
   saveSettings,
   getUserInfoBundle,
+  updateAvatar,
   updateProfile,
   updatePassword,
   getLoginBundle,

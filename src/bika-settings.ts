@@ -277,9 +277,34 @@ export async function getUserInfoBundle(): Promise<UserInfoBundleContract> {
       ],
       extern: {
         isPunched: profileUser.isPunched === true,
+        name: String(profileUser.name ?? ""),
+        level: toNum(profileUser.level, 0),
+        title: String(profileUser.title ?? ""),
+        slogan: String(profileUser.slogan ?? ""),
+        exp: toNum(profileUser.exp, 0),
       },
     },
   };
+}
+
+export async function updateAvatar(payload: Record<string, unknown> = {}) {
+  const jpegBase64 = String(payload.jpegBase64 ?? "").trim();
+  if (!jpegBase64 || !/^[A-Za-z0-9+/]+={0,2}$/.test(jpegBase64)) {
+    throw new Error("请选择有效的头像图片");
+  }
+  // The host prepares a 200 × 200 JPEG before calling this function.
+  if (jpegBase64.length > 700_000) {
+    throw new Error("头像图片过大");
+  }
+
+  const apiBase = await getApiBase();
+  await bikaRequest({
+    url: `${apiBase}users/avatar`,
+    method: "PUT",
+    body: JSON.stringify({ avatar: `data:image/jpeg;base64,${jpegBase64}` }),
+  });
+
+  return { ok: true, message: "头像已更新" };
 }
 
 export async function updateProfile(payload: Record<string, unknown> = {}) {

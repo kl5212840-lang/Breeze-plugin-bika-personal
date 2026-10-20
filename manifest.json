@@ -3,13 +3,15 @@
   "uuid": "e9f18928-3ba8-4d86-a12e-b53a62f47933",
   "iconUrl": "https://raw.githubusercontent.com/kl5212840-lang/Breeze-plugin-bika-personal/main/assets/logo_round.webp",
   "describe": "独立更新的哔咔漫画插件",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "updateUrl": "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-bika-personal/releases/latest",
   "home": "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal",
   "npmName": "",
   "breezeExperience": {
     "searchHotFunction": "hotSearch",
     "profileTab": true,
+    "profileAvatarFunction": "updateAvatar",
+    "profileBioFunction": "updateProfile",
     "legacySources": [
       "0a0e5858-a467-4702-994a-79e608a4589d"
     ],
