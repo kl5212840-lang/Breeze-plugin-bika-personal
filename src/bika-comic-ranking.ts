@@ -1,5 +1,5 @@
 import type { ComicPagedListContract, StringMap } from "breeze-plugin-kit";
-import { toComicListItem, toCreatorListItem } from "./bika-comic-shared";
+import { toComicListItem } from "./bika-comic-shared";
 import { bikaRequest } from "./bika-request";
 import type { BikaRankingPayload } from "./bika-types";
 import { toStringMap } from "./bika-utils";
@@ -33,7 +33,19 @@ export async function getRankingData(
           .filter(
             (item): item is StringMap => !!item && typeof item === "object" && !Array.isArray(item),
           )
-          .map(async (item: StringMap) => await toCreatorListItem(item))
+          .map(async (item: StringMap) => ({
+            ...(await toComicListItem(
+              {
+                ...item,
+                title: item.name,
+                thumb: item.avatar,
+                author: item.title,
+                categories: [],
+              },
+              { pictureType: "creator" },
+            )),
+            extern: { rankingCreator: true },
+          }))
       : (Array.isArray(rawData.comics) ? rawData.comics : [])
           .filter(
             (item): item is StringMap => !!item && typeof item === "object" && !Array.isArray(item),

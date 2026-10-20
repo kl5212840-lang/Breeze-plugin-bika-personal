@@ -52,12 +52,28 @@ export async function fetchImageBytes({
   if (!targetUrl) throw new Error("url 不能为空");
 
   const { host } = new URL(targetUrl);
+  const requestImage = async (imageUrl: string) => {
+    const imageHost = new URL(imageUrl).host;
+    const response = await axios.get(imageUrl, {
+      headers: { Host: imageHost },
+      timeout: Math.max(0, timeoutMs) || 30000,
+      responseType: "arraybuffer",
+    });
+    return new Uint8Array(response.data);
+  };
 
-  const response = await axios.get(targetUrl, {
-    headers: { Host: host },
-    timeout: Math.max(0, timeoutMs) || 30000,
-    responseType: "arraybuffer",
-  });
-
-  return new Uint8Array(response.data);
+  try {
+    return await requestImage(targetUrl);
+  } catch (error) {
+    // Some category art exists on Picacomic's image CDN but returns 404 on
+    // the original-quality storage mirror. Do not retry unrelated hosts.
+    const status = axios.isAxiosError(error) ? error.response?.status : null;
+    if ((status === 404 || status === 422) &&
+        ["s3.picacomic.com", "storage.diwodiwo.xyz"].includes(host)) {
+      const fallback = new URL(targetUrl);
+      fallback.host = "img.picacomic.com";
+      return requestImage(fallback.toString());
+    }
+    throw error;
+  }
 }

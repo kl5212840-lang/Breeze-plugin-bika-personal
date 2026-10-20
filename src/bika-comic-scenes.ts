@@ -129,11 +129,21 @@ export async function getRankingFilterBundle(): Promise<FilterBundleContract> {
           label: "榜单",
           options: getBikaRankingOptions(),
         },
+        {
+          key: "rankingType",
+          kind: "choice" as const,
+          label: "类别",
+          options: [
+            { label: "最热门", value: "comic", result: { core: { type: "comic" } } },
+            { label: "骑士榜", value: "creator", result: { core: { type: "creator" } } },
+          ],
+        },
       ],
     },
     data: {
       values: {
         ranking: "day",
+        rankingType: "comic",
       },
     },
   };

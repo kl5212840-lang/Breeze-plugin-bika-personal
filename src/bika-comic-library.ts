@@ -188,6 +188,10 @@ async function getNavigationItems() {
     (item): item is StringMap => !!item && typeof item === "object" && !Array.isArray(item),
   );
   const authorization = String(await loadPluginSetting("auth.authorization", ""));
+  // These two entries are app shortcuts rather than /categories records. Their
+  // original Picacomic artwork is mirrored by the AGPL bikabika project.
+  const classicArt =
+    "https://raw.githubusercontent.com/kitUIN/bikabika/a7da0067f8769f7241ea23ebb6e0c3b7223d6953/bikabika/Assets/Picacgs";
   const categoryNavItems = await Promise.all(
     categories.map(async (item: StringMap) => {
       const thumb = toStringMap(item.thumb);
@@ -205,10 +209,14 @@ async function getNavigationItems() {
   return [
     toActionItem({
       title: "最近更新",
+      coverUrl: `${classicArt}/cat_latest.jpg`,
+      coverPath: "cat_latest.jpg",
       action: await buildHomeAction({ title: "最近更新" } as StringMap, authorization),
     }),
     toActionItem({
       title: "随机本子",
+      coverUrl: `${classicArt}/cat_random.jpg`,
+      coverPath: "cat_random.jpg",
       action: await buildHomeAction({ title: "随机本子" } as StringMap, authorization),
     }),
     ...categoryNavItems,

@@ -68,7 +68,7 @@ export function buildManifestInfo(): BikaPluginInfo {
     iconUrl:
       "https://raw.githubusercontent.com/kl5212840-lang/Breeze-plugin-bika-personal/main/assets/logo_round.webp",
     describe: "独立更新的哔咔漫画插件",
-    version: "0.1.5",
+    version: "0.1.6",
     updateUrl: "https://api.github.com/repos/kl5212840-lang/Breeze-plugin-bika-personal/releases/latest",
     home: "https://github.com/kl5212840-lang/Breeze-plugin-bika-personal",
     npmName: "",
