@@ -34,7 +34,6 @@ import { loadPluginSetting } from "./plugin-config";
 
 export async function searchComic(payload: BikaSearchPayload = {}): Promise<SearchResultContract> {
   const apiBase = await getApiBase();
-  console.log(payload);
   const payloadMap = toStringMap(payload);
   const extern = toStringMap(payload.extern);
   const page = Math.max(1, toNum(payload.page, 1));

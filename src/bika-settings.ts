@@ -390,7 +390,6 @@ function readLoginFormValues(payload: BikaLoginPayload = {}) {
 export async function loginWithPassword(
   payload: BikaLoginPayload = {},
 ): Promise<LoginSubmitResult> {
-  console.debug("loginWithPassword", payload);
   const { account, password } = readLoginFormValues(payload);
 
   if (!account || !password) {
@@ -416,8 +415,6 @@ export async function loginWithPassword(
     message: "登录成功",
     data: {
       account,
-      password,
-      token,
     },
   };
 }
@@ -453,7 +450,7 @@ async function runBikaAuthAndCheckInLoop() {
         cache: false,
       })) as StringMap;
 
-      console.info("[bika.init] login + checkin ok", data);
+      console.info("[bika.init] login + checkin ok");
       const punchData = toStringMap(data.data);
       const status = toStringMap(punchData.res).status;
       if (data.code === 200 && status && status !== "fail") {
@@ -466,9 +463,9 @@ async function runBikaAuthAndCheckInLoop() {
         } catch {}
       }
       return;
-    } catch (error) {
+    } catch {
       const delay = randomRetryDelayMs();
-      console.warn(`[bika.init] login/checkin failed, retry in ${delay}ms`, error);
+      console.warn(`[bika.init] login/checkin failed, retry in ${delay}ms`);
       await waitMs(delay);
     }
   }

@@ -74,6 +74,7 @@ export async function fetchImageBytes({
       fallback.host = "img.picacomic.com";
       return requestImage(fallback.toString());
     }
-    throw error;
+    // Do not propagate an AxiosError carrying the full image URL and headers.
+    throw new Error("图片请求失败，请稍后重试");
   }
 }

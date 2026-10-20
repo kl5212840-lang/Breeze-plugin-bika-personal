@@ -33,7 +33,6 @@ function normalizeApiBase(base: string): string {
 }
 
 export function setApiBase(base: string) {
-  console.info(`setApiBase: ${base}`);
   const normalized = normalizeApiBase(base);
   API_BASE = normalized || DEFAULT_API_BASE;
 }
@@ -178,13 +177,17 @@ function mapNetworkError(err: unknown): string {
   if (message === "under review") {
     return "审核中";
   }
-  if (message) {
+  if (
+    message &&
+    message.length <= 160 &&
+    !/[\r\n]|https?:\/\/|(?:password|token|authorization|cookie)\s*[=:]|bearer\s+/i.test(message)
+  ) {
     return message;
   }
   if (e?.code === "ECONNABORTED") {
     return "连接服务器超时";
   }
-  return String(e?.message || err || "未知网络错误");
+  return "网络请求失败，请检查网络后重试";
 }
 
 const bikaClient = axios.create({
@@ -260,11 +263,8 @@ bikaClient.interceptors.response.use(
 
     const mapped = mapNetworkError(error);
 
-    if (error && typeof error === "object") {
-      (error as { message?: string }).message = mapped || (error as { message?: string }).message;
-      throw error;
-    }
-
+    // Axios errors retain config, headers and request bodies (including login
+    // credentials). Only a safe message may cross the plugin/runtime boundary.
     throw new Error(mapped);
   },
 );
